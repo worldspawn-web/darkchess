@@ -1,7 +1,8 @@
 import './ChessBoard.css';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Chess } from 'chess.ts';
 import { PIECE_SYMBOLS, Piece } from '../types/chess';
+import Timer from './Timer';
 
 interface ChessBoardProps {
   gameMode: '10M' | '30M';
@@ -14,6 +15,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<Square[]>([]);
+  const [initialTime, setInitialTime] = useState(gameMode === '30M' ? 30 : 10);
+
+  useEffect(() => {
+    setInitialTime(gameMode === '30M' ? 30 : 10);
+  }, [gameMode]);
 
   const renderPiece = (piece: Piece | null) => {
     if (!piece) return null;
@@ -21,6 +27,11 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode }) => {
     const symbol = PIECE_SYMBOLS[piece.type];
     return <span className={`piece ${piece.color}`}>{symbol}</span>;
   };
+
+  const handleTimeEnd = useCallback(() => {
+    setIsPlaying(false);
+    // Here will be some logic for timeout
+  }, []);
 
   const handleSquareClick = (square: Square) => {
     if (!isPlaying) return;
@@ -78,8 +89,24 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode }) => {
 
   return (
     <div className="chess-board-container">
+      <div className="timer-container top">
+        <Timer
+          key={`black-${initialTime}`}
+          initialTime={initialTime}
+          isRunning={isPlaying && game.turn() === 'b'}
+          onTimeEnd={handleTimeEnd}
+        />
+      </div>
       <div className={`chess-board ${!isPlaying ? 'not-playing' : ''}`}>
         {[...Array(64)].map((_, i) => renderSquare(i))}
+      </div>
+      <div className="timer-container bottom">
+        <Timer
+          key={`white-${initialTime}`}
+          initialTime={initialTime}
+          isRunning={isPlaying && game.turn() === 'w'}
+          onTimeEnd={handleTimeEnd}
+        />
       </div>
       {!isPlaying && (
         <div className="play-overlay">

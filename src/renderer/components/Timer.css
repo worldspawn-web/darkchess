@@ -1,0 +1,24 @@
+.timer {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 24px;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.timer-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.timer-container.top {
+  top: -50px;
+}
+
+.timer-container.bottom {
+  bottom: -50px;
+}
