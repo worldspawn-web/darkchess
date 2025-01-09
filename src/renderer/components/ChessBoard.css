@@ -27,6 +27,7 @@
   position: relative;
   border: 1px solid #333;
   aspect-ratio: 1;
+  cursor: pointer;
 }
 
 .square.light {
@@ -35,6 +36,19 @@
 
 .square.dark {
   background-color: #222;
+}
+
+.square.selected {
+  background-color: rgba(255, 255, 0, 0.3);
+}
+
+.square.possible-move::after {
+  content: '';
+  position: absolute;
+  width: 25%;
+  height: 25%;
+  background-color: rgba(0, 255, 0, 0.3);
+  border-radius: 50%;
 }
 
 .piece {
