@@ -1,0 +1,42 @@
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 80vmin;
+  height: 80vmin;
+  border: 2px solid #fff;
+  margin: auto;
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vmin;
+  position: relative;
+  border: 1px solid #333;
+}
+
+.square.light {
+  background-color: #444;
+}
+
+.square.dark {
+  background-color: #222;
+}
+
+.rank-label,
+.file-label {
+  position: absolute;
+  font-size: 1.5vmin;
+  color: #888;
+}
+
+.rank-label {
+  right: 0.2vmin;
+  top: 0.2vmin;
+}
+
+.file-label {
+  left: 0.2vmin;
+  bottom: 0.2vmin;
+}
