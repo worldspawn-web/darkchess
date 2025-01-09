@@ -1,14 +1,22 @@
+import './ChessBoard.css';
 import React from 'react';
 import { Chess } from 'chess.ts';
-import './ChessBoard.css';
+import { PIECE_SYMBOLS, Piece } from '../types/chess';
 
 interface ChessBoardProps {
-  gameMode?: '10M' | '30M';
+  gameMode: '10M' | '30M';
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode = '30M' }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode }) => {
   const [game, setGame] = React.useState(new Chess());
   const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const renderPiece = (piece: Piece | null) => {
+    if (!piece) return null;
+
+    const symbol = PIECE_SYMBOLS[piece.type];
+    return <span className={`piece ${piece.color}`}>{symbol}</span>;
+  };
 
   const renderSquare = (i: number) => {
     const file = 'abcdefgh'[i % 8];
@@ -18,7 +26,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode = '30M' }) => {
 
     return (
       <div key={i} className={`square ${squareColor}`}>
-        {piece ? piece.type : ''}
+        {renderPiece(piece)}
         {i % 8 === 7 && <div className="rank-label">{rank}</div>}
         {Math.floor(i / 8) === 7 && <div className="file-label">{file}</div>}
       </div>

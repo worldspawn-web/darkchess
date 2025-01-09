@@ -37,6 +37,22 @@
   background-color: #222;
 }
 
+.piece {
+  font-size: 4vmin;
+  line-height: 1;
+  user-select: none;
+}
+
+.piece.w {
+  color: #fff;
+  text-shadow: 0 0 2px #000;
+}
+
+.piece.b {
+  color: #000;
+  text-shadow: 0 0 2px #fff;
+}
+
 .rank-label,
 .file-label {
   position: absolute;
