@@ -8,8 +8,13 @@ interface Stats {
   hoursPlayed: number;
 }
 
-const StatsPanel: React.FC = () => {
-  const [mode, setMode] = React.useState<'30M' | '10M'>('30M');
+interface StatsPanelProps {
+  gameMode: '30M' | '10M';
+  onGameModeChange: (mode: '30M' | '10M') => void;
+}
+
+const StatsPanel: React.FC<StatsPanelProps> = ({ gameMode, onGameModeChange }) => {
+  // const [mode, setMode] = React.useState<'30M' | '10M'>('30M');
   const [stats, setStats] = React.useState<Stats>({
     wins: 0,
     losses: 0,
@@ -24,10 +29,10 @@ const StatsPanel: React.FC = () => {
     <div className="stats-panel">
       <h2>Statistics</h2>
       <div className="mode-selector">
-        <button className={mode === '30M' ? 'active' : ''} onClick={() => setMode('30M')}>
+        <button className={gameMode === '30M' ? 'active' : ''} onClick={() => onGameModeChange('30M')}>
           30M
         </button>
-        <button className={mode === '10M' ? 'active' : ''} onClick={() => setMode('10M')}>
+        <button className={gameMode === '10M' ? 'active' : ''} onClick={() => onGameModeChange('10M')}>
           10M
         </button>
       </div>

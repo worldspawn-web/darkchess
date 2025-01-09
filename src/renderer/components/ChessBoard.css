@@ -1,10 +1,22 @@
+.chess-board-container {
+  position: relative;
+  width: 80vmin;
+  height: 80vmin;
+  margin: auto;
+}
+
 .chess-board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  width: 80vmin;
-  height: 80vmin;
+  width: 100%;
+  height: 100%;
   border: 2px solid #fff;
-  margin: auto;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.chess-board.not-playing {
+  filter: blur(3px);
+  opacity: 0.7;
 }
 
 .square {
@@ -39,4 +51,39 @@
 .file-label {
   left: 0.2vmin;
   bottom: 0.2vmin;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.play-button {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.play-button:hover {
+  background-color: #eee;
+  transform: scale(1.05);
+}
+
+.game-mode {
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.8;
 }
