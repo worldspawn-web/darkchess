@@ -1,0 +1,27 @@
+{
+  "name": "darkchess",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "css-loader": "^7.1.2",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "html-webpack-plugin": "^5.6.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.3",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  }
+}
