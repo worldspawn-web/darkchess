@@ -23,6 +23,12 @@
   background-color: #555;
 }
 
+.mode-selector button:disabled {
+  background-color: #222;
+  color: #666;
+  cursor: not-allowed;
+}
+
 .stats p {
   margin: 10px 0;
 }
