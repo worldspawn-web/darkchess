@@ -1,10 +1,10 @@
-import React from 'react';
 import './StatsPanel.css';
+import React, { useState } from 'react';
+import { MoreVertical } from 'lucide-react';
 
 interface Stats {
   wins: number;
   losses: number;
-  winPercentage: number;
   hoursPlayed: number;
 }
 
@@ -16,15 +16,18 @@ interface StatsPanelProps {
 
 const StatsPanel: React.FC<StatsPanelProps> = ({ gameMode, onGameModeChange, isGameStarted }) => {
   const [stats, setStats] = React.useState<Stats>({
-    wins: 0,
-    losses: 0,
-    winPercentage: 0,
-    hoursPlayed: 0,
+    wins: 3,
+    losses: 1,
+    hoursPlayed: 14,
   });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const winPercentage = stats.wins + stats.losses === 0 ? 0 : (stats.wins / (stats.wins + stats.losses)) * 100;
 
   return (
     <div className="stats-panel">
-      <h2>Statistics</h2>
+      <h2 className="panel-title">Dark Chess</h2>
+
       <div className="mode-selector">
         <button
           className={gameMode === '30M' ? 'active' : ''}
@@ -41,15 +44,39 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ gameMode, onGameModeChange, isG
           10M
         </button>
       </div>
-      <div className="stats">
-        <p>Wins: {stats.wins}</p>
-        <p>Losses: {stats.losses}</p>
-        <p>Win %: {stats.winPercentage.toFixed(2)}%</p>
-        <p>Hours played: {stats.hoursPlayed.toFixed(2)}</p>
+
+      <div className="stats-container">
+        <div className="stats-text">
+          <span className="wins">{stats.wins}W</span>
+          {' : '}
+          <span className="losses">{stats.losses}L</span>
+          <span className="percentage">({winPercentage.toFixed(0)}%)</span>
+        </div>
+
+        <div className="progress-bar">
+          <div className="progress-bar-fill" style={{ width: `${winPercentage}%` }} />
+        </div>
       </div>
+
       <div className="user-info">
-        <div className="avatar"></div>
-        <p className="nickname">Worldspawn</p>
+        <div className="separator" />
+        <div className="profile">
+          <div className="avatar"></div>
+          <div className="user-details">
+            <div className="nickname-container">
+              <p className="nickname">Worldspawn</p>
+              <button className="menu-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <MoreVertical size={16} />
+              </button>
+              {isMenuOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={() => console.log('Change account')}>Change account</button>
+                </div>
+              )}
+            </div>
+            <p className="hours-played">{stats.hoursPlayed}h</p>
+          </div>
+        </div>
       </div>
     </div>
   );
