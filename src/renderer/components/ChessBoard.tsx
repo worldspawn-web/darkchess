@@ -2,15 +2,8 @@ import './ChessBoard.css';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Chess } from 'chess.ts';
 import { PIECE_SYMBOLS, Piece } from '../types/chess';
+import { ChessBoardProps } from './ChessBoard.interface';
 import Timer from './Timer';
-
-interface ChessBoardProps {
-  gameMode: '10M' | '30M';
-  onGameStart: () => void;
-  onGameEnd: () => void;
-  gameType: 'PvP' | 'PvE';
-  aiDifficulty: number;
-}
 
 type Square = string;
 

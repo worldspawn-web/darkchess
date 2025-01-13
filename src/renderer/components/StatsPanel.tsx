@@ -1,30 +1,10 @@
 import './StatsPanel.css';
 import React, { useState } from 'react';
-import { MoreVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import AISelectionModal from './AISelectionModal';
+import { Stats, StatsPanelProps } from './StatsPanel.interface';
+import { AIBot } from './AISelectionModal.interface';
 
-interface Stats {
-  wins: number;
-  losses: number;
-  hoursPlayed: number;
-}
-
-interface AIBot {
-  name: string;
-  mmr: number;
-  avatar: string;
-  description: string;
-}
-
-interface StatsPanelProps {
-  gameMode: '30M' | '10M';
-  onGameModeChange: (mode: '30M' | '10M') => void;
-  isGameStarted: boolean;
-  onGameTypeChange: (type: 'PvP' | 'PvE') => void;
-  onAIDifficultyChange: (difficulty: number) => void;
-}
-
-// will refactor
 const BOTS: AIBot[] = [
   {
     name: 'Timur',

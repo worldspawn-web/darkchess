@@ -1,20 +1,6 @@
-import React from 'react';
 import './AISelectionModal.css';
-
-interface AIBot {
-  name: string;
-  mmr: number;
-  avatar: string;
-  description: string;
-}
-
-interface AISelectionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  bots: AIBot[];
-  onSelect: (bot: AIBot) => void;
-  selectedBot: AIBot;
-}
+import React from 'react';
+import { AIBot, AISelectionModalProps } from './AISelectionModal.interface';
 
 const AISelectionModal: React.FC<AISelectionModalProps> = ({ isOpen, onClose, bots, onSelect, selectedBot }) => {
   if (!isOpen) return null;

@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './Timer.css';
-
-interface TimerProps {
-  initialTime: number; // in minutes
-  isRunning: boolean;
-  onTimeEnd?: () => void;
-}
+import { TimerProps } from './Timer.interface';
 
 const Timer: React.FC<TimerProps> = ({ initialTime, isRunning, onTimeEnd }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime * 60); // Convert to seconds
+  const [timeLeft, setTimeLeft] = useState(initialTime * 60);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
