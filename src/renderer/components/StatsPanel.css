@@ -16,7 +16,8 @@
 }
 
 .mode-selector,
-.game-type-selector {
+.game-type-selector,
+.color-selector {
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -25,7 +26,8 @@
 }
 
 .mode-selector button,
-.game-type-selector button {
+.game-type-selector button,
+.color-selector button {
   background-color: #333;
   color: #fff;
   border: none;
@@ -36,15 +38,22 @@
 }
 
 .mode-selector button.active,
-.game-type-selector button.active {
+.game-type-selector button.active,
+.color-selector button.active {
   background-color: #555;
 }
 
 .mode-selector button:disabled,
-.game-type-selector button:disabled {
+.game-type-selector button:disabled,
+.color-selector button:disabled {
   background-color: #222;
   color: #666;
   cursor: not-allowed;
+}
+
+.color-selector button {
+  font-size: 24px;
+  padding: 5px 15px;
 }
 
 .ai-settings {
@@ -98,25 +107,6 @@
   margin: 5px 0 0;
   font-size: 14px;
   color: #aaa;
-}
-
-.ai-difficulty-selector {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.ai-difficulty-selector button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.ai-difficulty-selector button.active {
-  background-color: #555;
 }
 
 .stats-container {

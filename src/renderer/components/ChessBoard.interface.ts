@@ -4,4 +4,5 @@ export interface ChessBoardProps {
   onGameEnd: () => void;
   gameType: 'PvP' | 'PvE';
   aiDifficulty: number;
+  playerColor: 'white' | 'black';
 }

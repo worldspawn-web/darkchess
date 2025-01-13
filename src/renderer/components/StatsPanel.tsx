@@ -44,6 +44,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   isGameStarted,
   onGameTypeChange,
   onAIDifficultyChange,
+  onPlayerColorChange,
 }) => {
   const [stats, setStats] = React.useState<Stats>({
     wins: 3,
@@ -54,6 +55,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
   const [selectedBot, setSelectedBot] = useState<AIBot>(BOTS[0]);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
 
   const winPercentage = stats.wins + stats.losses === 0 ? 0 : (stats.wins / (stats.wins + stats.losses)) * 100;
 
@@ -66,6 +68,11 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
     setSelectedBot(bot);
     onAIDifficultyChange(BOTS.indexOf(bot) + 1);
     setIsAIModalOpen(false);
+  };
+
+  const handlePlayerColorChange = (color: 'white' | 'black') => {
+    setPlayerColor(color);
+    onPlayerColorChange(color);
   };
 
   return (
@@ -103,6 +110,23 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
           disabled={isGameStarted}
         >
           PvE
+        </button>
+      </div>
+
+      <div className="color-selector">
+        <button
+          className={playerColor === 'white' ? 'active' : ''}
+          onClick={() => handlePlayerColorChange('white')}
+          disabled={isGameStarted}
+        >
+          ♙
+        </button>
+        <button
+          className={playerColor === 'black' ? 'active' : ''}
+          onClick={() => handlePlayerColorChange('black')}
+          disabled={isGameStarted}
+        >
+          ♟
         </button>
       </div>
 

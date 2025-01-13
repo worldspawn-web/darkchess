@@ -10,4 +10,5 @@ export interface StatsPanelProps {
   isGameStarted: boolean;
   onGameTypeChange: (type: 'PvP' | 'PvE') => void;
   onAIDifficultyChange: (difficulty: number) => void;
+  onPlayerColorChange: (color: 'white' | 'black') => void;
 }

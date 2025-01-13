@@ -7,7 +7,14 @@ import Timer from './Timer';
 
 type Square = string;
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEnd, gameType, aiDifficulty }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({
+  gameMode,
+  onGameStart,
+  onGameEnd,
+  gameType,
+  aiDifficulty,
+  playerColor,
+}) => {
   const [game, setGame] = useState(new Chess());
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
@@ -31,8 +38,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEn
     // Here will be some logic for timeout
   }, [onGameEnd]);
 
+  const makeAIMove = () => {
+    const moves = game.moves();
+    if (moves.length > 0) {
+      const randomIndex = Math.floor(Math.random() * moves.length);
+      game.move(moves[randomIndex]);
+      setGame(new Chess(game.fen()));
+    }
+  };
+
   const handleSquareClick = (square: Square) => {
     if (!isPlaying) return;
+    if (gameType === 'PvE' && game.turn() !== playerColor[0]) return;
 
     if (selectedSquare === null) {
       const piece = game.get(square);
@@ -50,6 +67,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEn
           setGame(new Chess(game.fen()));
           setSelectedSquare(null);
           setPossibleMoves([]);
+
+          if (gameType === 'PvE') {
+            setTimeout(makeAIMove, 500);
+          }
         } else if (game.get(square) && game.get(square)?.color === game.get(selectedSquare)?.color) {
           setSelectedSquare(square);
           setPossibleMoves(game.moves({ square, verbose: true }).map((move) => move.to));
@@ -84,26 +105,31 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEn
     setIsPlaying(true);
     setGame(new Chess());
     onGameStart();
+
+    if (gameType === 'PvE' && playerColor === 'black') {
+      setTimeout(makeAIMove, 500);
+    }
   };
+
+  const boardSquares = [...Array(64)].map((_, i) => renderSquare(i));
+  const orderedSquares = playerColor === 'white' ? boardSquares : boardSquares.reverse();
 
   return (
     <div className="chess-board-container">
       <div className="timer-container top">
         <Timer
-          key={`black-${initialTime}`}
+          key={`opponent-${initialTime}`}
           initialTime={initialTime}
-          isRunning={isPlaying && game.turn() === 'b'}
+          isRunning={isPlaying && game.turn() !== playerColor[0]}
           onTimeEnd={handleTimeEnd}
         />
       </div>
-      <div className={`chess-board ${!isPlaying ? 'not-playing' : ''}`}>
-        {[...Array(64)].map((_, i) => renderSquare(i))}
-      </div>
+      <div className={`chess-board ${!isPlaying ? 'not-playing' : ''}`}>{orderedSquares}</div>
       <div className="timer-container bottom">
         <Timer
-          key={`white-${initialTime}`}
+          key={`player-${initialTime}`}
           initialTime={initialTime}
-          isRunning={isPlaying && game.turn() === 'w'}
+          isRunning={isPlaying && game.turn() === playerColor[0]}
           onTimeEnd={handleTimeEnd}
         />
       </div>

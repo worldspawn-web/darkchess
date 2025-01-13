@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import './App.css';
+import React, { useState } from 'react';
 import ChessBoard from './components/ChessBoard';
 import StatsPanel from './components/StatsPanel';
 
@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
   const [aiDifficulty, setAiDifficulty] = useState(1);
+  const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
 
   const handleGameModeChange = (mode: '30M' | '10M') => {
     if (!isGameStarted) {
@@ -27,6 +28,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handlePlayerColorChange = (color: 'white' | 'black') => {
+    if (!isGameStarted) {
+      setPlayerColor(color);
+    }
+  };
+
   const handleGameStart = () => {
     setIsGameStarted(true);
   };
@@ -43,6 +50,7 @@ const App: React.FC = () => {
         isGameStarted={isGameStarted}
         onGameTypeChange={handleGameTypeChange}
         onAIDifficultyChange={handleAIDifficultyChange}
+        onPlayerColorChange={handlePlayerColorChange}
       />
       <ChessBoard
         gameMode={gameMode}
@@ -50,6 +58,7 @@ const App: React.FC = () => {
         onGameEnd={handleGameEnd}
         gameType={gameType}
         aiDifficulty={aiDifficulty}
+        playerColor={playerColor}
       />
     </div>
   );
