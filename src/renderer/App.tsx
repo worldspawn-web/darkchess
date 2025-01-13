@@ -9,6 +9,7 @@ const App: React.FC = () => {
   const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
   const [aiDifficulty, setAiDifficulty] = useState(1);
   const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
+  const [selectedBot, setSelectedBot] = useState({ name: 'Timur', mmr: 1000 });
 
   const handleGameModeChange = (mode: '30M' | '10M') => {
     if (!isGameStarted) {
@@ -34,6 +35,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handleBotSelection = (bot: { name: string; mmr: number }) => {
+    if (!isGameStarted) {
+      setSelectedBot(bot);
+    }
+  };
+
   const handleGameStart = () => {
     setIsGameStarted(true);
   };
@@ -51,6 +58,7 @@ const App: React.FC = () => {
         onGameTypeChange={handleGameTypeChange}
         onAIDifficultyChange={handleAIDifficultyChange}
         onPlayerColorChange={handlePlayerColorChange}
+        onBotSelection={handleBotSelection}
       />
       <ChessBoard
         gameMode={gameMode}
@@ -59,6 +67,7 @@ const App: React.FC = () => {
         gameType={gameType}
         aiDifficulty={aiDifficulty}
         playerColor={playerColor}
+        selectedBot={selectedBot}
       />
     </div>
   );

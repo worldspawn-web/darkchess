@@ -1,9 +1,11 @@
 import './ChessBoard.css';
 import React, { useState, useCallback, useEffect } from 'react';
 import { Chess } from 'chess.ts';
+import { CSSTransition } from 'react-transition-group';
 import { PIECE_SYMBOLS, Piece } from '../types/chess';
-import { ChessBoardProps } from './ChessBoard.interface';
 import Timer from './Timer';
+import GameResult from './GameResult';
+import { ChessBoardProps } from './ChessBoard.interface';
 
 type Square = string;
 
@@ -14,16 +16,30 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   gameType,
   aiDifficulty,
   playerColor,
+  selectedBot,
 }) => {
   const [game, setGame] = useState(new Chess());
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
   const [possibleMoves, setPossibleMoves] = useState<Square[]>([]);
   const [initialTime, setInitialTime] = useState(gameMode === '30M' ? 30 : 10);
+  const [gameResult, setGameResult] = useState<'win' | 'loss' | 'draw' | null>(null);
+  const [gameDuration, setGameDuration] = useState(0);
+  const [gameStartTime, setGameStartTime] = useState<number | null>(null);
 
   useEffect(() => {
     setInitialTime(gameMode === '30M' ? 30 : 10);
   }, [gameMode]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying && gameStartTime) {
+      interval = setInterval(() => {
+        setGameDuration(Math.floor((Date.now() - gameStartTime) / 1000));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, gameStartTime]);
 
   const renderPiece = (piece: Piece | null) => {
     if (!piece) return null;
@@ -34,9 +50,21 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   const handleTimeEnd = useCallback(() => {
     setIsPlaying(false);
+    setGameResult(game.turn() === playerColor[0] ? 'loss' : 'win');
     onGameEnd();
-    // Here will be some logic for timeout
-  }, [onGameEnd]);
+  }, [game, onGameEnd, playerColor]);
+
+  const checkGameEnd = () => {
+    if (game.inCheckmate()) {
+      setGameResult(game.turn() === playerColor[0] ? 'loss' : 'win');
+      setIsPlaying(false);
+      onGameEnd();
+    } else if (game.inDraw() || game.inStalemate() || game.inThreefoldRepetition()) {
+      setGameResult('draw');
+      setIsPlaying(false);
+      onGameEnd();
+    }
+  };
 
   const makeAIMove = () => {
     const moves = game.moves();
@@ -44,6 +72,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       const randomIndex = Math.floor(Math.random() * moves.length);
       game.move(moves[randomIndex]);
       setGame(new Chess(game.fen()));
+      checkGameEnd();
     }
   };
 
@@ -67,8 +96,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           setGame(new Chess(game.fen()));
           setSelectedSquare(null);
           setPossibleMoves([]);
+          checkGameEnd();
 
-          if (gameType === 'PvE') {
+          if (gameType === 'PvE' && isPlaying) {
             setTimeout(makeAIMove, 500);
           }
         } else if (game.get(square) && game.get(square)?.color === game.get(selectedSquare)?.color) {
@@ -104,11 +134,19 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   const handlePlayClick = () => {
     setIsPlaying(true);
     setGame(new Chess());
+    setGameResult(null);
+    setGameDuration(0);
+    setGameStartTime(Date.now());
     onGameStart();
 
     if (gameType === 'PvE' && playerColor === 'black') {
       setTimeout(makeAIMove, 500);
     }
+  };
+
+  const handlePlayAgain = () => {
+    setGameResult(null);
+    handlePlayClick();
   };
 
   const boardSquares = [...Array(64)].map((_, i) => renderSquare(i));
@@ -124,7 +162,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           onTimeEnd={handleTimeEnd}
         />
       </div>
-      <div className={`chess-board ${!isPlaying ? 'not-playing' : ''}`}>{orderedSquares}</div>
+      <div className={`chess-board ${!isPlaying || gameResult ? 'not-playing' : ''}`}>{orderedSquares}</div>
       <div className="timer-container bottom">
         <Timer
           key={`player-${initialTime}`}
@@ -133,7 +171,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           onTimeEnd={handleTimeEnd}
         />
       </div>
-      {!isPlaying && (
+      {!isPlaying && !gameResult && (
         <div className="play-overlay">
           <button className="play-button" onClick={handlePlayClick}>
             Play
@@ -141,6 +179,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           <div className="game-mode">{gameMode}</div>
         </div>
       )}
+      <CSSTransition in={gameResult !== null} timeout={300} classNames="fade" unmountOnExit>
+        <div className="result-overlay">
+          <GameResult
+            result={gameResult!}
+            gameType={gameType}
+            botName={gameType === 'PvE' ? selectedBot.name : undefined}
+            gameDuration={gameDuration}
+            mmrGain={gameType === 'PvE' && gameResult === 'win' ? 14 : undefined}
+            onPlayAgain={handlePlayAgain}
+          />
+        </div>
+      </CSSTransition>
     </div>
   );
 };

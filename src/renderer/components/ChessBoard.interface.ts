@@ -5,4 +5,5 @@ export interface ChessBoardProps {
   gameType: 'PvP' | 'PvE';
   aiDifficulty: number;
   playerColor: 'white' | 'black';
+  selectedBot: { name: string; mmr: number };
 }

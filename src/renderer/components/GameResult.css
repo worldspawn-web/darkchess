@@ -1,0 +1,62 @@
+.game-result {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.game-result.win {
+  background-color: rgba(0, 100, 0, 0.8);
+}
+
+.game-result.loss {
+  background-color: rgba(100, 0, 0, 0.8);
+}
+
+.game-result.draw {
+  background-color: rgba(100, 100, 100, 0.8);
+}
+
+.game-result h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.game-result p {
+  margin: 10px 0;
+}
+
+.bot-stats {
+  font-style: italic;
+}
+
+.game-duration {
+  font-size: 14px;
+}
+
+.mmr-gain {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.play-again-btn {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.play-again-btn:hover {
+  background-color: #45a049;
+}
