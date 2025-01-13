@@ -1,6 +1,6 @@
 import './StatsPanel.css';
 import React, { useState } from 'react';
-import { MoreVertical } from 'lucide-react';
+import { MoreVertical, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Stats {
   wins: number;
@@ -12,17 +12,38 @@ interface StatsPanelProps {
   gameMode: '30M' | '10M';
   onGameModeChange: (mode: '30M' | '10M') => void;
   isGameStarted: boolean;
+  onGameTypeChange: (type: 'PvP' | 'PvE') => void;
+  onAIDifficultyChange: (difficulty: number) => void;
 }
 
-const StatsPanel: React.FC<StatsPanelProps> = ({ gameMode, onGameModeChange, isGameStarted }) => {
+const StatsPanel: React.FC<StatsPanelProps> = ({
+  gameMode,
+  onGameModeChange,
+  isGameStarted,
+  onGameTypeChange,
+  onAIDifficultyChange,
+}) => {
   const [stats, setStats] = React.useState<Stats>({
     wins: 3,
     losses: 1,
     hoursPlayed: 14,
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
+  const [aiDifficulty, setAiDifficulty] = useState(1);
+  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
 
   const winPercentage = stats.wins + stats.losses === 0 ? 0 : (stats.wins / (stats.wins + stats.losses)) * 100;
+
+  const handleGameTypeChange = (type: 'PvP' | 'PvE') => {
+    setGameType(type);
+    onGameTypeChange(type);
+  };
+
+  const handleAIDifficultyChange = (difficulty: number) => {
+    setAiDifficulty(difficulty);
+    onAIDifficultyChange(difficulty);
+  };
 
   return (
     <div className="stats-panel">
@@ -44,6 +65,45 @@ const StatsPanel: React.FC<StatsPanelProps> = ({ gameMode, onGameModeChange, isG
           10M
         </button>
       </div>
+
+      <div className="game-type-selector">
+        <button
+          className={gameType === 'PvP' ? 'active' : ''}
+          onClick={() => handleGameTypeChange('PvP')}
+          disabled={isGameStarted}
+        >
+          PvP
+        </button>
+        <button
+          className={gameType === 'PvE' ? 'active' : ''}
+          onClick={() => handleGameTypeChange('PvE')}
+          disabled={isGameStarted}
+        >
+          PvE
+        </button>
+      </div>
+
+      {gameType === 'PvE' && (
+        <div className="ai-settings">
+          <button className="ai-settings-toggle" onClick={() => setIsAISettingsOpen(!isAISettingsOpen)}>
+            AI Difficulty {isAISettingsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {isAISettingsOpen && (
+            <div className="ai-difficulty-selector">
+              {[1, 2, 3, 4, 5].map((level) => (
+                <button
+                  key={level}
+                  className={aiDifficulty === level ? 'active' : ''}
+                  onClick={() => handleAIDifficultyChange(level)}
+                  disabled={isGameStarted}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="stats-container">
         <div className="stats-text">

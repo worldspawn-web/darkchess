@@ -8,11 +8,13 @@ interface ChessBoardProps {
   gameMode: '10M' | '30M';
   onGameStart: () => void;
   onGameEnd: () => void;
+  gameType: 'PvP' | 'PvE';
+  aiDifficulty: number;
 }
 
 type Square = string;
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEnd }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ gameMode, onGameStart, onGameEnd, gameType, aiDifficulty }) => {
   const [game, setGame] = useState(new Chess());
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);

@@ -15,7 +15,8 @@
   color: #fff;
 }
 
-.mode-selector {
+.mode-selector,
+.game-type-selector {
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -23,7 +24,8 @@
   padding: 0 30px;
 }
 
-.mode-selector button {
+.mode-selector button,
+.game-type-selector button {
   background-color: #333;
   color: #fff;
   border: none;
@@ -33,14 +35,51 @@
   transition: background-color 0.2s;
 }
 
-.mode-selector button.active {
+.mode-selector button.active,
+.game-type-selector button.active {
   background-color: #555;
 }
 
-.mode-selector button:disabled {
+.mode-selector button:disabled,
+.game-type-selector button:disabled {
   background-color: #222;
   color: #666;
   cursor: not-allowed;
+}
+
+.ai-settings {
+  margin-bottom: 20px;
+}
+
+.ai-settings-toggle {
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-difficulty-selector {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.ai-difficulty-selector button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.ai-difficulty-selector button.active {
+  background-color: #555;
 }
 
 .stats-container {
