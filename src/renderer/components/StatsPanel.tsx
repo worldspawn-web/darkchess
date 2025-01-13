@@ -1,11 +1,19 @@
 import './StatsPanel.css';
 import React, { useState } from 'react';
 import { MoreVertical, ChevronDown, ChevronUp } from 'lucide-react';
+import AISelectionModal from './AISelectionModal';
 
 interface Stats {
   wins: number;
   losses: number;
   hoursPlayed: number;
+}
+
+interface AIBot {
+  name: string;
+  mmr: number;
+  avatar: string;
+  description: string;
 }
 
 interface StatsPanelProps {
@@ -15,6 +23,40 @@ interface StatsPanelProps {
   onGameTypeChange: (type: 'PvP' | 'PvE') => void;
   onAIDifficultyChange: (difficulty: number) => void;
 }
+
+// will refactor
+const BOTS: AIBot[] = [
+  {
+    name: 'Timur',
+    mmr: 1000,
+    avatar: '/placeholder.svg?height=50&width=50',
+    description: 'Начинающий бот с базовыми навыками игры в шахматы.',
+  },
+  {
+    name: 'Alex',
+    mmr: 1500,
+    avatar: '/placeholder.svg?height=50&width=50',
+    description: 'Бот среднего уровня с хорошим пониманием тактики.',
+  },
+  {
+    name: 'Maria',
+    mmr: 2000,
+    avatar: '/placeholder.svg?height=50&width=50',
+    description: 'Продвинутый бот с сильной стратегической игрой.',
+  },
+  {
+    name: 'Garry',
+    mmr: 2500,
+    avatar: '/placeholder.svg?height=50&width=50',
+    description: 'Эксперт-уровень, способный конкурировать с сильными игроками.',
+  },
+  {
+    name: 'Deep Blue',
+    mmr: 3000,
+    avatar: '/placeholder.svg?height=50&width=50',
+    description: 'Легендарный бот, практически непобедимый.',
+  },
+];
 
 const StatsPanel: React.FC<StatsPanelProps> = ({
   gameMode,
@@ -30,8 +72,8 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
-  const [aiDifficulty, setAiDifficulty] = useState(1);
-  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
+  const [selectedBot, setSelectedBot] = useState<AIBot>(BOTS[0]);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   const winPercentage = stats.wins + stats.losses === 0 ? 0 : (stats.wins / (stats.wins + stats.losses)) * 100;
 
@@ -40,9 +82,10 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
     onGameTypeChange(type);
   };
 
-  const handleAIDifficultyChange = (difficulty: number) => {
-    setAiDifficulty(difficulty);
-    onAIDifficultyChange(difficulty);
+  const handleAISelection = (bot: AIBot) => {
+    setSelectedBot(bot);
+    onAIDifficultyChange(BOTS.indexOf(bot) + 1);
+    setIsAIModalOpen(false);
   };
 
   return (
@@ -85,23 +128,17 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
       {gameType === 'PvE' && (
         <div className="ai-settings">
-          <button className="ai-settings-toggle" onClick={() => setIsAISettingsOpen(!isAISettingsOpen)}>
-            AI Difficulty {isAISettingsOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          <button className="ai-settings-toggle" onClick={() => setIsAIModalOpen(true)} disabled={isGameStarted}>
+            AI Difficulty
           </button>
-          {isAISettingsOpen && (
-            <div className="ai-difficulty-selector">
-              {[1, 2, 3, 4, 5].map((level) => (
-                <button
-                  key={level}
-                  className={aiDifficulty === level ? 'active' : ''}
-                  onClick={() => handleAIDifficultyChange(level)}
-                  disabled={isGameStarted}
-                >
-                  {level}
-                </button>
-              ))}
+          <div className="ai-info">
+            <img src={selectedBot.avatar} alt={selectedBot.name} className="ai-avatar" />
+            <div className="ai-details">
+              <h3>{selectedBot.name}</h3>
+              <p>MMR: {selectedBot.mmr}</p>
+              <p>{selectedBot.description}</p>
             </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -138,6 +175,14 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
           </div>
         </div>
       </div>
+
+      <AISelectionModal
+        isOpen={isAIModalOpen}
+        onClose={() => setIsAIModalOpen(false)}
+        bots={BOTS}
+        onSelect={handleAISelection}
+        selectedBot={selectedBot}
+      />
     </div>
   );
 };
