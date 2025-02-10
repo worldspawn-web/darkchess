@@ -1,9 +1,13 @@
+'use client';
+
 import './StatsPanel.css';
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { MoreVertical } from 'lucide-react';
 import AISelectionModal from './AISelectionModal';
-import { Stats, StatsPanelProps } from './StatsPanel.interface';
-import { AIBot } from './AISelectionModal.interface';
+
+import type { StatsPanelProps } from './StatsPanel.interface';
+import type { AIBot } from './AISelectionModal.interface';
 
 const BOTS: AIBot[] = [
   {
@@ -45,19 +49,19 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   onGameTypeChange,
   onAIDifficultyChange,
   onPlayerColorChange,
+  onBotSelection,
+  botStats,
+  totalPlayTime,
 }) => {
-  const [stats, setStats] = React.useState<Stats>({
-    wins: 3,
-    losses: 1,
-    hoursPlayed: 14,
-  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [gameType, setGameType] = useState<'PvP' | 'PvE'>('PvP');
   const [selectedBot, setSelectedBot] = useState<AIBot>(BOTS[0]);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [playerColor, setPlayerColor] = useState<'white' | 'black'>('white');
 
-  const winPercentage = stats.wins + stats.losses === 0 ? 0 : (stats.wins / (stats.wins + stats.losses)) * 100;
+  const totalGames = botStats.reduce((sum, stat) => sum + stat.wins + stat.losses + stat.draws, 0);
+  const totalWins = botStats.reduce((sum, stat) => sum + stat.wins, 0);
+  const winPercentage = totalGames === 0 ? 0 : (totalWins / totalGames) * 100;
 
   const handleGameTypeChange = (type: 'PvP' | 'PvE') => {
     setGameType(type);
@@ -67,6 +71,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   const handleAISelection = (bot: AIBot) => {
     setSelectedBot(bot);
     onAIDifficultyChange(BOTS.indexOf(bot) + 1);
+    onBotSelection(bot);
     setIsAIModalOpen(false);
   };
 
@@ -136,7 +141,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
             AI Difficulty
           </button>
           <div className="ai-info">
-            <img src={selectedBot.avatar} alt={selectedBot.name} className="ai-avatar" />
+            <img src={selectedBot.avatar || '/placeholder.svg'} alt={selectedBot.name} className="ai-avatar" />
             <div className="ai-details">
               <h3>{selectedBot.name}</h3>
               <p>MMR: {selectedBot.mmr}</p>
@@ -148,9 +153,9 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
       <div className="stats-container">
         <div className="stats-text">
-          <span className="wins">{stats.wins}W</span>
+          <span className="wins">{totalWins}W</span>
           {' : '}
-          <span className="losses">{stats.losses}L</span>
+          <span className="losses">{totalGames - totalWins}L</span>
           <span className="percentage">({winPercentage.toFixed(0)}%)</span>
         </div>
 
@@ -175,7 +180,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
                 </div>
               )}
             </div>
-            <p className="hours-played">{stats.hoursPlayed}h</p>
+            <p className="hours-played">{Math.floor(totalPlayTime / 60)}h</p>
           </div>
         </div>
       </div>

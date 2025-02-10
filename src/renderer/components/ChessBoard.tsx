@@ -1,11 +1,15 @@
+'use client';
+
 import './ChessBoard.css';
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Chess } from 'chess.ts';
 import { CSSTransition } from 'react-transition-group';
-import { PIECE_SYMBOLS, Piece } from '../types/chess';
+import { PIECE_SYMBOLS, type Piece } from '../types/chess';
 import Timer from './Timer';
 import GameResult from './GameResult';
-import { ChessBoardProps } from './ChessBoard.interface';
+
+import type { ChessBoardProps } from './ChessBoard.interface';
 
 type Square = string;
 
@@ -50,19 +54,21 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   const handleTimeEnd = useCallback(() => {
     setIsPlaying(false);
-    setGameResult(game.turn() === playerColor[0] ? 'loss' : 'win');
-    onGameEnd();
-  }, [game, onGameEnd, playerColor]);
+    const result = game.turn() === playerColor[0] ? 'loss' : 'win';
+    setGameResult(result);
+    onGameEnd(result, gameDuration);
+  }, [game, onGameEnd, playerColor, gameDuration]);
 
   const checkGameEnd = () => {
     if (game.inCheckmate()) {
-      setGameResult(game.turn() === playerColor[0] ? 'loss' : 'win');
+      const result = game.turn() === playerColor[0] ? 'loss' : 'win';
+      setGameResult(result);
       setIsPlaying(false);
-      onGameEnd();
+      onGameEnd(result, gameDuration);
     } else if (game.inDraw() || game.inStalemate() || game.inThreefoldRepetition()) {
       setGameResult('draw');
       setIsPlaying(false);
-      onGameEnd();
+      onGameEnd('draw', gameDuration);
     }
   };
 

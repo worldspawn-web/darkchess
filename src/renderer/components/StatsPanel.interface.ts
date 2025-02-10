@@ -1,8 +1,4 @@
-export interface Stats {
-  wins: number;
-  losses: number;
-  hoursPlayed: number;
-}
+import type { BotStat } from '../utils/database';
 
 export interface StatsPanelProps {
   gameMode: '30M' | '10M';
@@ -12,4 +8,6 @@ export interface StatsPanelProps {
   onAIDifficultyChange: (difficulty: number) => void;
   onPlayerColorChange: (color: 'white' | 'black') => void;
   onBotSelection: (bot: { name: string; mmr: number }) => void;
+  botStats: BotStat[];
+  totalPlayTime: number;
 }
